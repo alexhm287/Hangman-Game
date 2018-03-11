@@ -1,0 +1,14 @@
+.letter {
+	margin:20px;
+	font-family:'Lucida Console', Monaco, monospace;
+	text-decoration: underline;
+	font-size:100px;
+}
+
+.hideletter {
+	margin:20px;
+	font-family:'Lucida Console', Monaco, monospace;
+	text-decoration: underline;
+	font-size:100px;
+	color:white;
+}
