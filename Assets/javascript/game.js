@@ -64,15 +64,27 @@ function displayGuessesLeft() {
 }
 
 function showLettersGuessed() {
-	var letterGuesseDiv = document.getElementById("letters-incorrect");
-	letterGuesseDiv.innerHTML = "[" + lettersGuessedIncorrect + "]";
+	var a = document.getElementById("letters-incorrect");
+	a.innerHTML = "[" + lettersGuessedIncorrect + "]";
 }
 
 function showWinCount() {
-	var letterGuesseDiv = document.getElementById("win-count");
-	letterGuesseDiv.innerHTML = myHangmanListPointer + 1;
+	var a = document.getElementById("win-count");
+	a.innerHTML = myHangmanListPointer + 1;
 }
 
+function displayImage(iPath) {
+	var a = document.getElementById("image-div");
+	a.innerHTML = "<image src='" + iPath + "' width='70%' height='70%'>";
+}
+
+function playSound(scPath) {
+	var a = document.getElementById("my-audio");
+	a.pause();
+	a.innerHTML = "<source src='" + scPath + "' type='audio/mpeg'>"; 
+	a.load();
+	a.play();
+}
 
 function hangmanKeypress(e) {
 	var ekey = e.key;
@@ -122,7 +134,12 @@ function hangmanKeypress(e) {
 	if(allLettersGuessedCorrectly) {
 		//alert("You guessed word: " + myCurrentHMWord);
 		// show nice image, play music
-		showWinCount();
+		showWinCount(); 
+		var imagePath = "Assets/images/" + myCurrentHMWord + ".jpg";
+		displayImage(imagePath); 
+		var scPath = "Assets/Audio/" + myCurrentHMWord + ".mp3";
+		playSound(scPath); 
+
 		var lenOfWordList = myHMList.length;
 		if (myHangmanListPointer >= lenOfWordList) {
 			//alert("You got all the words!!");
