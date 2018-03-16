@@ -1,3 +1,1 @@
 # Hangman-Game
-
-Trial
