@@ -1,36 +1,33 @@
 
-
-var myHMList = ["blondie","journey","winger"];
-var myHangmanListPointer = 0;
+var wordArray = ["blondie","journey","winger"];
+var correctCount = 0;
+var arrayIndex = 0;
 var letterGuessedCorrect = [];
 var numberOfGuesses = 10;
-var numberOfGuessesUsed = 0;
 var lettersGuessedIncorrect = [];
-
 
 function initNextWord() {
 	console.log("next word");
-	myHangmanListPointer++;
-	numberOfGuessesUsed = 0;
+	arrayIndex++;
+	numberOfGuesses = 10;
 	letterGuessedCorrect = [];
 	lettersGuessedIncorrect = [];
 }
 
 function startGameHM() {
 	console.log("starting game");
-	myHangmanListPointer = 0;
-	numberOfGuessesUsed = 0;
+	numberOfGuesses = 10;
 	letterGuessedCorrect = [];
 	lettersGuessedIncorrect = [];
 	showLettersGuessed();
+	displayGuessesLeft()
 	displayHMWord();
 }
 
-function displayHMWord(){				
+function displayHMWord() {
 	var hmWordSlots = document.getElementById("hm-word-chars");
 	console.log(hmWordSlots);
-	console.log(document);
-	var currentWord = myHMList[myHangmanListPointer];
+	var currentWord = wordArray[arrayIndex];
 	var currentWordLength = currentWord.length;
 	var myDashes = "";
 	for(var i = 0 ;i < currentWordLength; i++ ) {
@@ -39,20 +36,17 @@ function displayHMWord(){
 		if (letterGuessedCorrect.indexOf(currentLetter) != -1) {
 			guess = currentLetter;
 		}
-
-		myDashes = myDashes + "<span class='letter'>"+ guess + "</span>";	
-
-		//<span class="letter">&nbsp;</span>				
+		myDashes = myDashes + "<span class='letter'>"+ guess + "</span>";
 	}
 	hmWordSlots.innerHTML = myDashes;
-
-
 }
 
 function trackNumberOfGuesses() {
-    numberOfGuessesUsed++;
-	if(numberOfGuessesUsed >= numberOfGuesses) {
-		//alert("You Lost");
+    numberOfGuesses--;
+	if(0 >= numberOfGuesses) {
+		alert('You lost, game restarting!')
+		startGameHM();
+
 		return false;
 	}
 	return true;
@@ -60,7 +54,7 @@ function trackNumberOfGuesses() {
 
 function displayGuessesLeft() {
 	var guessesLeftDiv = document.getElementById("count-guesses-left");
-	guessesLeftDiv.innerHTML = numberOfGuesses - numberOfGuessesUsed;
+	guessesLeftDiv.innerHTML = numberOfGuesses;
 }
 
 function showLettersGuessed() {
@@ -70,7 +64,7 @@ function showLettersGuessed() {
 
 function showWinCount() {
 	var a = document.getElementById("win-count");
-	a.innerHTML = myHangmanListPointer + 1;
+	a.innerHTML = arrayIndex + 1;
 }
 
 function displayImage(iPath) {
@@ -90,7 +84,7 @@ function hangmanKeypress(e) {
 	var ekey = e.key;
 	console.log(ekey);
 
-	if (myHangmanListPointer == 0 && numberOfGuessesUsed == 0){
+	if (arrayIndex == 0 && numberOfGuesses == 10){
 		startGameHM();
 	}
 	// Determine if user pressed correct key again
@@ -100,15 +94,12 @@ function hangmanKeypress(e) {
 	if(lettersGuessedIncorrect.indexOf(ekey) != -1){
 		return;
 	}
-
 	// Determine if user used up all guesses
 	if(!trackNumberOfGuesses()) {
 		return;
 	}
 
-
-	
-	var myCurrentHMWord = myHMList[myHangmanListPointer];
+	var myCurrentHMWord = wordArray[arrayIndex];
 	console.log("My current word is "+ myCurrentHMWord); 
 	// "blondie".indexOf("a")
 	var ekeyIndexOfCurrentWord = myCurrentHMWord.indexOf(ekey); 
@@ -132,6 +123,7 @@ function hangmanKeypress(e) {
 	}
 
 	if(allLettersGuessedCorrectly) {
+		correctCount++;
 		//alert("You guessed word: " + myCurrentHMWord);
 		// show nice image, play music
 		showWinCount(); 
@@ -140,9 +132,8 @@ function hangmanKeypress(e) {
 		var scPath = "Assets/Audio/" + myCurrentHMWord + ".mp3";
 		playSound(scPath); 
 
-		var lenOfWordList = myHMList.length;
-		if (myHangmanListPointer >= lenOfWordList) {
-			//alert("You got all the words!!");
+		if (correctCount == 3) {
+			alert("You got all the words!!");
 			return;
 		}
 		displayGuessesLeft();
@@ -155,10 +146,4 @@ function hangmanKeypress(e) {
 	displayHMWord();
 }
 
-document.addEventListener("keydown", hangmanKeypress, false);
-
-
-
-
-
-
+document.addEventListener("keydown", hangmanKeypress);
